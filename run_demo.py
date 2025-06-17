@@ -32,8 +32,8 @@ def supply_chain():
   clone_cmd = ("in-toto-run"
                     " --verbose"
                     " --use-dsse"
-                    " --step-name clone --products demo-project/foo.py"
-                    " --signing-key jaja -- git clone https://github.com/in-toto/demo-project.git")
+                    " --step-name clone --products demo-reference-for-in-toto/security-guild-rocks.py"
+                    " --signing-key jaja -- git clone https://github.com/in-toto/demo-reference-for-in-toto.git")
   print(clone_cmd)
   subprocess.call(shlex.split(clone_cmd))
 
@@ -44,12 +44,12 @@ def supply_chain():
                     " --use-dsse"
                     " --step-name update-version"
                     " --signing-key jaja"
-                    " --materials demo-project/foo.py")
+                    " --materials demo-reference-for-in-toto/security-guild-rocks.py")
 
   print(update_version_start_cmd)
   subprocess.call(shlex.split(update_version_start_cmd))
 
-  update_version = "echo 'VERSION = \"foo-v1\"\n\nprint(\"Hello in-toto\")\n' > demo-project/foo.py"
+  update_version = "echo 'VERSION = \"foo-v1\"\n\nprint(\"Hello in-toto\")\n' > demo-reference-for-in-toto/security-guild-rocks.py"
   print(update_version)
   subprocess.call(update_version, shell=True)
 
@@ -59,22 +59,22 @@ def supply_chain():
                     " --use-dsse"
                     " --step-name update-version"
                     " --signing-key jaja"
-                    " --products demo-project/foo.py")
+                    " --products demo-reference-for-in-toto/security-guild-rocks.py")
 
   print(update_version_stop_cmd)
   subprocess.call(shlex.split(update_version_stop_cmd))
 
-  copytree("demo-project", "../functionary_manu/demo-project")
+  copytree("demo-reference-for-in-toto", "../functionary_manu/demo-reference-for-in-toto")
 
   prompt_key("Package (Carl)")
   os.chdir("../functionary_manu")
   package_cmd = ("in-toto-run"
                  " --verbose"
                  " --use-dsse"
-                 " --step-name package --materials demo-project/foo.py"
-                 " --products demo-project.tar.gz"
+                 " --step-name package --materials demo-reference-for-in-toto/security-guild-rocks.py"
+                 " --products demo-reference-for-in-toto.tar.gz"
                  " --signing-key manu --record-streams"
-                 " -- tar --exclude '.git' -zcvf demo-project.tar.gz demo-project")
+                 " -- tar --exclude '.git' -zcvf demo-reference-for-in-toto.tar.gz demo-reference-for-in-toto")
   print(package_cmd)
   subprocess.call(shlex.split(package_cmd))
 
@@ -85,7 +85,7 @@ def supply_chain():
   copyfile("functionary_jaja/clone.210dcc50.link", "final_product/clone.210dcc50.link")
   copyfile("functionary_jaja/update-version.210dcc50.link", "final_product/update-version.210dcc50.link")
   copyfile("functionary_manu/package.be06db20.link", "final_product/package.be06db20.link")
-  copyfile("functionary_manu/demo-project.tar.gz", "final_product/demo-project.tar.gz")
+  copyfile("functionary_manu/demo-reference-for-in-toto.tar.gz", "final_product/demo-reference-for-in-toto.tar.gz")
 
 
   prompt_key("Verify final product (client)")
@@ -104,7 +104,7 @@ def supply_chain():
 
   prompt_key("Tampering with the supply chain")
   os.chdir("../functionary_manu")
-  tamper_cmd = "echo 'something evil' >> demo-project/foo.py"
+  tamper_cmd = "echo 'something evil' >> demo-reference-for-in-toto/security-guild-rocks.py"
   print(tamper_cmd)
   subprocess.call(tamper_cmd, shell=True)
 
@@ -113,10 +113,10 @@ def supply_chain():
   package_cmd = ("in-toto-run"
                  " --verbose"
                  " --use-dsse"
-                 " --step-name package --materials demo-project/foo.py"
-                 " --products demo-project.tar.gz"
+                 " --step-name package --materials demo-reference-for-in-toto/security-guild-rocks.py"
+                 " --products demo-reference-for-in-toto.tar.gz"
                  " --signing-key manu --record-streams"
-                 " -- tar --exclude '.git' -zcvf demo-project.tar.gz demo-project")
+                 " -- tar --exclude '.git' -zcvf demo-reference-for-in-toto.tar.gz demo-reference-for-in-toto")
   print(package_cmd)
   subprocess.call(shlex.split(package_cmd))
 
@@ -127,7 +127,7 @@ def supply_chain():
   copyfile("functionary_jaja/clone.210dcc50.link", "final_product/clone.210dcc50.link")
   copyfile("functionary_jaja/update-version.210dcc50.link", "final_product/update-version.210dcc50.link")
   copyfile("functionary_manu/package.be06db20.link", "final_product/package.be06db20.link")
-  copyfile("functionary_manu/demo-project.tar.gz", "final_product/demo-project.tar.gz")
+  copyfile("functionary_manu/demo-reference-for-in-toto.tar.gz", "final_product/demo-reference-for-in-toto.tar.gz")
 
 
   prompt_key("Verify final product (client)")
@@ -156,18 +156,18 @@ def main():
       "owner_martin/root.layout",
       "functionary_jaja/clone.210dcc50.link",
       "functionary_jaja/update-version.210dcc50.link",
-      "functionary_jaja/demo-project",
+      "functionary_jaja/demo-reference-for-in-toto",
       "functionary_manu/package.be06db20.link",
-      "functionary_manu/demo-project.tar.gz",
-      "functionary_manu/demo-project",
+      "functionary_manu/demo-reference-for-in-toto.tar.gz",
+      "functionary_manu/demo-reference-for-in-toto",
       "final_product/martin.pub",
-      "final_product/demo-project.tar.gz",
+      "final_product/demo-reference-for-in-toto.tar.gz",
       "final_product/package.be06db20.link",
       "final_product/clone.210dcc50.link",
       "final_product/update-version.210dcc50.link",
       "final_product/untar.link",
       "final_product/root.layout",
-      "final_product/demo-project",
+      "final_product/demo-reference-for-in-toto",
     ]
 
     for path in files_to_delete:

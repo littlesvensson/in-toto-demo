@@ -40,16 +40,16 @@ EXPECTED_STDOUT = \
 + python create_layout.py
 Created demo in-toto layout as "root.layout".
 + cd ../functionary_jaja
-+ in-toto-run --step-name clone --use-dsse --products demo-project/foo.py --signing-key jaja -- git clone https://github.com/in-toto/demo-project.git
-+ in-toto-record start --step-name update-version --use-dsse --signing-key jaja --materials demo-project/foo.py
-+ sed -i.bak s/v0/v1/ demo-project/foo.py
-+ rm demo-project/foo.py.bak
-+ in-toto-record stop --step-name update-version --use-dsse --signing-key jaja --products demo-project/foo.py
-+ cp -r demo-project ../functionary_manu/
++ in-toto-run --step-name clone --use-dsse --products demo-reference-for-in-toto/security-guild-rocks.py --signing-key jaja -- git clone https://github.com/in-toto/demo-reference-for-in-toto.git
++ in-toto-record start --step-name update-version --use-dsse --signing-key jaja --materials demo-reference-for-in-toto/security-guild-rocks.py
++ sed -i.bak s/v0/v1/ demo-reference-for-in-toto/security-guild-rocks.py
++ rm demo-reference-for-in-toto/security-guild-rocks.py.bak
++ in-toto-record stop --step-name update-version --use-dsse --signing-key jaja --products demo-reference-for-in-toto/security-guild-rocks.py
++ cp -r demo-reference-for-in-toto ../functionary_manu/
 + cd ../functionary_manu
-+ in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key manu -- tar --exclude .git -zcvf demo-project.tar.gz demo-project
++ in-toto-run --step-name package --use-dsse --materials demo-reference-for-in-toto/security-guild-rocks.py --products demo-reference-for-in-toto.tar.gz --signing-key manu -- tar --exclude .git -zcvf demo-reference-for-in-toto.tar.gz demo-reference-for-in-toto
 + cd ..
-+ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-project.tar.gz final_product/
++ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-reference-for-in-toto.tar.gz final_product/
 + cd final_product
 + cp ../owner_martin/martin.pub .
 + in-toto-verify --layout root.layout --verification-keys martin.pub
@@ -57,19 +57,19 @@ Created demo in-toto layout as "root.layout".
 0
 + cd ../functionary_manu
 + echo something evil
-+ in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key manu -- tar --exclude .git -zcvf demo-project.tar.gz demo-project
++ in-toto-run --step-name package --use-dsse --materials demo-reference-for-in-toto/security-guild-rocks.py --products demo-reference-for-in-toto.tar.gz --signing-key manu -- tar --exclude .git -zcvf demo-reference-for-in-toto.tar.gz demo-reference-for-in-toto
 + cd ..
-+ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-project.tar.gz final_product/
++ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-reference-for-in-toto.tar.gz final_product/
 + cd final_product
 + in-toto-verify --layout root.layout --verification-keys martin.pub
-(in-toto-verify) RuleVerificationError: 'DISALLOW *' matched the following artifacts: ['demo-project/foo.py']
+(in-toto-verify) RuleVerificationError: 'DISALLOW *' matched the following artifacts: ['demo-reference-for-in-toto/security-guild-rocks.py']
 Full trace for 'expected_materials' of item 'package':
 Available materials (used for queue):
-['demo-project/foo.py']
+['demo-reference-for-in-toto/security-guild-rocks.py']
 Available products:
-['demo-project.tar.gz']
-Queue after 'MATCH demo-project/* WITH PRODUCTS FROM update-version':
-['demo-project/foo.py']
+['demo-reference-for-in-toto.tar.gz']
+Queue after 'MATCH demo-reference-for-in-toto/* WITH PRODUCTS FROM update-version':
+['demo-reference-for-in-toto/security-guild-rocks.py']
 
 + echo 1
 1

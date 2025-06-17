@@ -106,38 +106,38 @@ directory and perform the step.
 
 ```shell
 cd ../functionary_jaja
-in-toto-run --step-name clone --use-dsse --products demo-project/foo.py --signing-key jaja -- git clone https://github.com/in-toto/demo-project.git
+in-toto-run --step-name clone --use-dsse --products demo-reference-for-in-toto/security-guild-rocks.py --signing-key ../keys/jaja -- git clone https://github.com/littlesvensson/demo-reference-for-in-toto.git
 ```
 
 Here is what happens behind the scenes:
- 1. In-toto wraps the command `git clone https://github.com/in-toto/demo-project.git`,
- 1. hashes the contents of the source code, i.e. `demo-project/foo.py`,
+ 1. In-toto wraps the command `git clone https://github.com/littlesvensson/demo-reference-for-in-toto.git`,
+ 1. hashes the contents of the source code, i.e. `demo-reference-for-in-toto/security-guild-rocks.py`,
  1. adds the hash together with other information to a metadata file,
  1. signs the metadata with Jaja's private key, and
  1. stores everything to `clone.[Jaja's keyid].link`.
 
 ### Update version number (Jaja)
 Before Manu packages the source code, Jaja will update
-a version number hard-coded into `foo.py`. He does this using the `in-toto-record` command,
+a version number hard-coded into `security-guild-rocks.py`. He does this using the `in-toto-record` command,
 which produces the same link metadata file as above but does not require Jaja to wrap his action in a single command.
 So first Jaja records the state of the files he will modify:
 
 ```shell
 # In functionary_jaja directory
-in-toto-record start --step-name update-version --use-dsse --signing-key jaja --materials demo-project/foo.py
+in-toto-record start --step-name update-version --use-dsse --signing-key ../keys/jaja --materials demo-reference-for-in-toto/security-guild-rocks.py
 ```
 
-Then Jaja uses an editor of his choice to update the version number in `demo-project/foo.py`, e.g.:
+Then Jaja uses an editor of his choice to update the version number in `demo-reference-for-in-toto/security-guild-rocks.py`, e.g.:
 
 ```shell
-sed -i.bak 's/v0/v1/' demo-project/foo.py && rm demo-project/foo.py.bak
+sed -i.bak 's/v0/v1/' demo-reference-for-in-toto/security-guild-rocks.py && rm demo-reference-for-in-toto/security-guild-rocks.py.bak
 ```
 
 And finally he records the state of files after the modification and produces
 a link metadata file called `update-version.[Jaja's keyid].link`.
 ```shell
 # In functionary_jaja directory
-in-toto-record stop --step-name update-version --use-dsse --signing-key jaja --products demo-project/foo.py
+in-toto-record stop --step-name update-version --use-dsse --signing-key ../keys/jaja --products demo-reference-for-in-toto/security-guild-rocks.py
 ```
 
 Jaja has done his work and can send over the sources to Manu, who will create
@@ -145,7 +145,7 @@ the package for the user.
 
 ```shell
 # Jaja has to send the update sources to Manu so that he can package them
-cp -r demo-project ../functionary_manu/
+cp -r demo-reference-for-in-toto ../functionary_manu/
 ```
 
 ### Package (Manu)
@@ -154,7 +154,7 @@ to change to Manu's directory and create a package of the software project
 
 ```shell
 cd ../functionary_manu
-in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key manu -- tar --exclude ".git" -zcvf demo-project.tar.gz demo-project
+in-toto-run --step-name package --use-dsse --materials demo-reference-for-in-toto/security-guild-rocks.py --products demo-reference-for-in-toto.tar.gz --signing-key ../keys/manu -- tar --exclude ".git" -zcvf demo-reference-for-in-toto.tar.gz demo-reference-for-in-toto
 ```
 
 This will create another step link metadata file, called `package.[Manu's keyid].link`.
@@ -163,11 +163,11 @@ It's time to release our software now.
 
 ### Verify final product (client)
 Let's first copy all relevant files into the `final_product` that is
-our software package `demo-project.tar.gz` and the related metadata files `root.layout`,
+our software package `demo-reference-for-in-toto.tar.gz` and the related metadata files `root.layout`,
 `clone.[Jaja's keyid].link`, `update-version.[Jaja's keyid].link` and `package.[Manu's keyid].link`:
 ```shell
 cd ..
-cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-project.tar.gz final_product/
+cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-reference-for-in-toto.tar.gz final_product/
 ```
 And now run verification on behalf of the client:
 ```shell
@@ -196,24 +196,24 @@ echo $?
 ### Tampering with the software supply chain
 Now, let’s try to tamper with the software supply chain.
 Imagine that someone got a hold of the source code before Manu could package it.
-We will simulate this by changing `demo-project/foo.py` on Manu's machine
+We will simulate this by changing `demo-reference-for-in-toto/security-guild-rocks.py` on Manu's machine
 (in `functionary_manu` directory) and then let Manu package and ship the
 malicious code.
 
 ```shell
 cd ../functionary_manu
-echo something evil >> demo-project/foo.py
+echo muheHEIAMEVIL >> demo-reference-for-in-toto/security-guild-rocks.py
 ```
 Manu thought that this is the genuine code he got from Jaja and
-unwittingly packages the tampered version of foo.py
+unwittingly packages the tampered version of security-guild-rocks.py
 
 ```shell
-in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key manu -- tar --exclude ".git" -zcvf demo-project.tar.gz demo-project
+in-toto-run --step-name package --use-dsse --materials demo-reference-for-in-toto/security-guild-rocks.py --products demo-reference-for-in-toto.tar.gz --signing-key ../keys/manu -- tar --exclude ".git" -zcvf demo-reference-for-in-toto.tar.gz demo-reference-for-in-toto
 ```
 and ships everything out as final product to the client:
 ```shell
 cd ..
-cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-project.tar.gz final_product/
+cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-reference-for-in-toto.tar.gz final_product/
 ```
 
 ### Verifying the malicious product
@@ -222,7 +222,7 @@ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaj
 cd final_product
 in-toto-verify --layout root.layout --verification-keys martin.pub
 ```
-This time, in-toto will detect that the product `foo.py` from Jaja's `update-version`
+This time, in-toto will detect that the product `security-guild-rocks.py` from Jaja's `update-version`
 step was not used as material in Manu's `package` step (the verified hashes
 won't match) and therefore will fail verification an return a non-zero value:
 ```shell
