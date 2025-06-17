@@ -5,27 +5,27 @@ from in_toto.models.metadata import Envelope
 # https://github.com/in-toto/in-toto/issues/663
 from in_toto.models._signer import load_public_key_from_file
 def main():
-  # Load Alice's private key to later sign the layout
-  with open("alice", "rb") as f:
-    key_alice = load_pem_private_key(f.read(), None)
+  # Load martin's private key to later sign the layout
+  with open("martin", "rb") as f:
+    key_martin = load_pem_private_key(f.read(), None)
 
-  signer_alice = CryptoSigner(key_alice)
-  # Fetch and load Bob's and Carl's public keys
+  signer_martin = CryptoSigner(key_martin)
+  # Fetch and load jaja's and Carl's public keys
   # to specify that they are authorized to perform certain step in the layout
-  key_bob  = load_public_key_from_file("../functionary_bob/bob.pub")
-  key_carl  = load_public_key_from_file("../functionary_carl/carl.pub")  
+  key_jaja  = load_public_key_from_file("../functionary_jaja/jaja.pub")
+  key_manu  = load_public_key_from_file("../functionary_manu/manu.pub")  
 
   layout = Layout.read({
       "_type": "layout",
       "keys": {
-          key_bob["keyid"]: key_bob,
-          key_carl["keyid"]: key_carl,
+          key_jaja["keyid"]: key_jaja,
+          key_manu["keyid"]: key_manu,
       },
       "steps": [{
           "name": "clone",
           "expected_materials": [],
           "expected_products": [["CREATE", "demo-project/foo.py"], ["DISALLOW", "*"]],
-          "pubkeys": [key_bob["keyid"]],
+          "pubkeys": [key_jaja["keyid"]],
           "expected_command": [
               "git",
               "clone",
@@ -37,7 +37,7 @@ def main():
           "expected_materials": [["MATCH", "demo-project/*", "WITH", "PRODUCTS",
                                 "FROM", "clone"], ["DISALLOW", "*"]],
           "expected_products": [["MODIFY", "demo-project/foo.py"], ["DISALLOW", "*"]],
-          "pubkeys": [key_bob["keyid"]],
+          "pubkeys": [key_jaja["keyid"]],
           "expected_command": [],
           "threshold": 1,
         },{
@@ -49,7 +49,7 @@ def main():
           "expected_products": [
               ["CREATE", "demo-project.tar.gz"], ["DISALLOW", "*"],
           ],
-          "pubkeys": [key_carl["keyid"]],
+          "pubkeys": [key_manu["keyid"]],
           "expected_command": [
               "tar",
               "--exclude",
@@ -68,7 +68,7 @@ def main():
               # materials/products to record from the rules we wouldn't have to
               # ALLOW other files that we aren't interested in.
               ["ALLOW", ".keep"],
-              ["ALLOW", "alice.pub"],
+              ["ALLOW", "martin.pub"],
               ["ALLOW", "root.layout"],
               ["ALLOW", "*.link"],
               ["DISALLOW", "*"]
@@ -79,7 +79,7 @@ def main():
               ["ALLOW", "demo-project/.git/*"],
               ["ALLOW", "demo-project.tar.gz"],
               ["ALLOW", ".keep"],
-              ["ALLOW", "alice.pub"],
+              ["ALLOW", "martin.pub"],
               ["ALLOW", "root.layout"],
               ["ALLOW", "*.link"],
               ["DISALLOW", "*"]
@@ -95,7 +95,7 @@ def main():
   metadata = Envelope.from_signable(layout)
 
   # Sign and dump layout to "root.layout"
-  metadata.create_signature(signer_alice)
+  metadata.create_signature(signer_martin)
   metadata.dump("root.layout")
   print('Created demo in-toto layout as "root.layout".')
 

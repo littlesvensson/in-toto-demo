@@ -22,18 +22,18 @@ def prompt_key(prompt):
 def supply_chain():
 
   prompt_key("Define supply chain layout (Alice)")
-  os.chdir("owner_alice")
+  os.chdir("owner_martin")
   create_layout_cmd = "python create_layout.py"
   print(create_layout_cmd)
   subprocess.call(shlex.split(create_layout_cmd))
 
   prompt_key("Clone source code (Bob)")
-  os.chdir("../functionary_bob")
+  os.chdir("../functionary_jaja")
   clone_cmd = ("in-toto-run"
                     " --verbose"
                     " --use-dsse"
                     " --step-name clone --products demo-project/foo.py"
-                    " --signing-key bob -- git clone https://github.com/in-toto/demo-project.git")
+                    " --signing-key jaja -- git clone https://github.com/in-toto/demo-project.git")
   print(clone_cmd)
   subprocess.call(shlex.split(clone_cmd))
 
@@ -43,7 +43,7 @@ def supply_chain():
                     " --verbose"
                     " --use-dsse"
                     " --step-name update-version"
-                    " --signing-key bob"
+                    " --signing-key jaja"
                     " --materials demo-project/foo.py")
 
   print(update_version_start_cmd)
@@ -58,22 +58,22 @@ def supply_chain():
                     " --verbose"
                     " --use-dsse"
                     " --step-name update-version"
-                    " --signing-key bob"
+                    " --signing-key jaja"
                     " --products demo-project/foo.py")
 
   print(update_version_stop_cmd)
   subprocess.call(shlex.split(update_version_stop_cmd))
 
-  copytree("demo-project", "../functionary_carl/demo-project")
+  copytree("demo-project", "../functionary_manu/demo-project")
 
   prompt_key("Package (Carl)")
-  os.chdir("../functionary_carl")
+  os.chdir("../functionary_manu")
   package_cmd = ("in-toto-run"
                  " --verbose"
                  " --use-dsse"
                  " --step-name package --materials demo-project/foo.py"
                  " --products demo-project.tar.gz"
-                 " --signing-key carl --record-streams"
+                 " --signing-key manu --record-streams"
                  " -- tar --exclude '.git' -zcvf demo-project.tar.gz demo-project")
   print(package_cmd)
   subprocess.call(shlex.split(package_cmd))
@@ -81,20 +81,20 @@ def supply_chain():
 
   prompt_key("Create final product")
   os.chdir("..")
-  copyfile("owner_alice/root.layout", "final_product/root.layout")
-  copyfile("functionary_bob/clone.210dcc50.link", "final_product/clone.210dcc50.link")
-  copyfile("functionary_bob/update-version.210dcc50.link", "final_product/update-version.210dcc50.link")
-  copyfile("functionary_carl/package.be06db20.link", "final_product/package.be06db20.link")
-  copyfile("functionary_carl/demo-project.tar.gz", "final_product/demo-project.tar.gz")
+  copyfile("owner_martin/root.layout", "final_product/root.layout")
+  copyfile("functionary_jaja/clone.210dcc50.link", "final_product/clone.210dcc50.link")
+  copyfile("functionary_jaja/update-version.210dcc50.link", "final_product/update-version.210dcc50.link")
+  copyfile("functionary_manu/package.be06db20.link", "final_product/package.be06db20.link")
+  copyfile("functionary_manu/demo-project.tar.gz", "final_product/demo-project.tar.gz")
 
 
   prompt_key("Verify final product (client)")
   os.chdir("final_product")
-  copyfile("../owner_alice/alice.pub", "alice.pub")
+  copyfile("../owner_martin/martin.pub", "martin.pub")
   verify_cmd = ("in-toto-verify"
                 " --verbose"
                 " --layout root.layout"
-                " --verification-keys alice.pub")
+                " --verification-keys martin.pub")
   print(verify_cmd)
   retval = subprocess.call(shlex.split(verify_cmd))
   print("Return value: " + str(retval))
@@ -103,7 +103,7 @@ def supply_chain():
 
 
   prompt_key("Tampering with the supply chain")
-  os.chdir("../functionary_carl")
+  os.chdir("../functionary_manu")
   tamper_cmd = "echo 'something evil' >> demo-project/foo.py"
   print(tamper_cmd)
   subprocess.call(tamper_cmd, shell=True)
@@ -115,7 +115,7 @@ def supply_chain():
                  " --use-dsse"
                  " --step-name package --materials demo-project/foo.py"
                  " --products demo-project.tar.gz"
-                 " --signing-key carl --record-streams"
+                 " --signing-key manu --record-streams"
                  " -- tar --exclude '.git' -zcvf demo-project.tar.gz demo-project")
   print(package_cmd)
   subprocess.call(shlex.split(package_cmd))
@@ -123,20 +123,20 @@ def supply_chain():
 
   prompt_key("Create final product")
   os.chdir("..")
-  copyfile("owner_alice/root.layout", "final_product/root.layout")
-  copyfile("functionary_bob/clone.210dcc50.link", "final_product/clone.210dcc50.link")
-  copyfile("functionary_bob/update-version.210dcc50.link", "final_product/update-version.210dcc50.link")
-  copyfile("functionary_carl/package.be06db20.link", "final_product/package.be06db20.link")
-  copyfile("functionary_carl/demo-project.tar.gz", "final_product/demo-project.tar.gz")
+  copyfile("owner_martin/root.layout", "final_product/root.layout")
+  copyfile("functionary_jaja/clone.210dcc50.link", "final_product/clone.210dcc50.link")
+  copyfile("functionary_jaja/update-version.210dcc50.link", "final_product/update-version.210dcc50.link")
+  copyfile("functionary_manu/package.be06db20.link", "final_product/package.be06db20.link")
+  copyfile("functionary_manu/demo-project.tar.gz", "final_product/demo-project.tar.gz")
 
 
   prompt_key("Verify final product (client)")
   os.chdir("final_product")
-  copyfile("../owner_alice/alice.pub", "alice.pub")
+  copyfile("../owner_martin/martin.pub", "martin.pub")
   verify_cmd = ("in-toto-verify"
                 " --verbose"
                 " --layout root.layout"
-                " --verification-keys alice.pub")
+                " --verification-keys martin.pub")
 
   print(verify_cmd)
   retval = subprocess.call(shlex.split(verify_cmd))
@@ -153,14 +153,14 @@ def main():
 
   if args.clean:
     files_to_delete = [
-      "owner_alice/root.layout",
-      "functionary_bob/clone.210dcc50.link",
-      "functionary_bob/update-version.210dcc50.link",
-      "functionary_bob/demo-project",
-      "functionary_carl/package.be06db20.link",
-      "functionary_carl/demo-project.tar.gz",
-      "functionary_carl/demo-project",
-      "final_product/alice.pub",
+      "owner_martin/root.layout",
+      "functionary_jaja/clone.210dcc50.link",
+      "functionary_jaja/update-version.210dcc50.link",
+      "functionary_jaja/demo-project",
+      "functionary_manu/package.be06db20.link",
+      "functionary_manu/demo-project.tar.gz",
+      "functionary_manu/demo-project",
+      "final_product/martin.pub",
       "final_product/demo-project.tar.gz",
       "final_product/package.be06db20.link",
       "final_product/clone.210dcc50.link",

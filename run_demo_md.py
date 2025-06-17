@@ -36,32 +36,32 @@ INSTRUCTIONS_FN = "README.md"
 SNIPPET_PATTERN = r"```shell\n([\s\S]*?)\n```"
 
 EXPECTED_STDOUT = \
-"""+ cd owner_alice
+"""+ cd owner_martin
 + python create_layout.py
 Created demo in-toto layout as "root.layout".
-+ cd ../functionary_bob
-+ in-toto-run --step-name clone --use-dsse --products demo-project/foo.py --signing-key bob -- git clone https://github.com/in-toto/demo-project.git
-+ in-toto-record start --step-name update-version --use-dsse --signing-key bob --materials demo-project/foo.py
++ cd ../functionary_jaja
++ in-toto-run --step-name clone --use-dsse --products demo-project/foo.py --signing-key jaja -- git clone https://github.com/in-toto/demo-project.git
++ in-toto-record start --step-name update-version --use-dsse --signing-key jaja --materials demo-project/foo.py
 + sed -i.bak s/v0/v1/ demo-project/foo.py
 + rm demo-project/foo.py.bak
-+ in-toto-record stop --step-name update-version --use-dsse --signing-key bob --products demo-project/foo.py
-+ cp -r demo-project ../functionary_carl/
-+ cd ../functionary_carl
-+ in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key carl -- tar --exclude .git -zcvf demo-project.tar.gz demo-project
++ in-toto-record stop --step-name update-version --use-dsse --signing-key jaja --products demo-project/foo.py
++ cp -r demo-project ../functionary_manu/
++ cd ../functionary_manu
++ in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key manu -- tar --exclude .git -zcvf demo-project.tar.gz demo-project
 + cd ..
-+ cp owner_alice/root.layout functionary_bob/clone.210dcc50.link functionary_bob/update-version.210dcc50.link functionary_carl/package.be06db20.link functionary_carl/demo-project.tar.gz final_product/
++ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-project.tar.gz final_product/
 + cd final_product
-+ cp ../owner_alice/alice.pub .
-+ in-toto-verify --layout root.layout --verification-keys alice.pub
++ cp ../owner_martin/martin.pub .
++ in-toto-verify --layout root.layout --verification-keys martin.pub
 + echo 0
 0
-+ cd ../functionary_carl
++ cd ../functionary_manu
 + echo something evil
-+ in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key carl -- tar --exclude .git -zcvf demo-project.tar.gz demo-project
++ in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key manu -- tar --exclude .git -zcvf demo-project.tar.gz demo-project
 + cd ..
-+ cp owner_alice/root.layout functionary_bob/clone.210dcc50.link functionary_bob/update-version.210dcc50.link functionary_carl/package.be06db20.link functionary_carl/demo-project.tar.gz final_product/
++ cp owner_martin/root.layout functionary_jaja/clone.210dcc50.link functionary_jaja/update-version.210dcc50.link functionary_manu/package.be06db20.link functionary_manu/demo-project.tar.gz final_product/
 + cd final_product
-+ in-toto-verify --layout root.layout --verification-keys alice.pub
++ in-toto-verify --layout root.layout --verification-keys martin.pub
 (in-toto-verify) RuleVerificationError: 'DISALLOW *' matched the following artifacts: ['demo-project/foo.py']
 Full trace for 'expected_materials' of item 'package':
 Available materials (used for queue):
