@@ -52,6 +52,7 @@ already have RSA keys in each of their directories. This is what you see:
 ```bash
 tree  # If you don't have tree, try 'find .' instead
 # the tree command gives you the following output
+# Be aware that  keys/ folder is not part of the demo, it is just a place to store the private keys. The public keys are in the functionary directories, please change them for your own keys if you want to use this demo with your own in-toto keys.
 # .
 # ├── README.md
 # ├── final_product
@@ -61,13 +62,16 @@ tree  # If you don't have tree, try 'find .' instead
 # ├── functionary_manu
 # │   ├── manu
 # │   └── manu.pub
+# ├── keys 
+# │   ├── jaja
+# │   ├── manu
+# │   └── martin
 # ├── owner_martin
 # │   ├── martin
 # │   ├── martin.pub
 # │   └── create_layout.py
 # ├── requirements.txt
 # ├── run_demo.py
-# └── run_demo_md.py
 ```
 
 ## Run the demo commands

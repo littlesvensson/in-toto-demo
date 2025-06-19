@@ -63,9 +63,7 @@ def main():
           "name": "untar",
           "expected_materials": [
               ["MATCH", "demo-reference-for-in-toto.tar.gz", "WITH", "PRODUCTS", "FROM", "package"],
-              # FIXME: If the routine running inspections would gather the
-              # materials/products to record from the rules we wouldn't have to
-              # ALLOW other files that we aren't interested in.
+
               ["ALLOW", ".keep"],
               ["ALLOW", "martin.pub"],
               ["ALLOW", "root.layout"],
@@ -74,7 +72,6 @@ def main():
           ],
           "expected_products": [
               ["MATCH", "demo-reference-for-in-toto/security-guild-rocks.py", "WITH", "PRODUCTS", "FROM", "update-version"],
-              # FIXME: See expected_materials above
               ["ALLOW", "demo-reference-for-in-toto/.git/*"],
               ["ALLOW", "demo-reference-for-in-toto.tar.gz"],
               ["ALLOW", ".keep"],
